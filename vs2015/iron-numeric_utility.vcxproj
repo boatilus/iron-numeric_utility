@@ -119,6 +119,9 @@
     <ClInclude Include="..\deps\catch.h" />
     <ClInclude Include="..\numeric_utility.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\test\is_positive.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

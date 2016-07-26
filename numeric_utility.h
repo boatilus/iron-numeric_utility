@@ -19,10 +19,6 @@
 #include <limits>
 #include <type_traits>
 
-#if _MSC_VER
-#define constexpr   // MSVC simply can't deal with SFINAE'd constexpr functions properly
-#endif
-
 #if __clang__
 #define attr_const __attribute__((const))
 #pragma clang diagnostic push
@@ -87,7 +83,7 @@ namespace iron {
     // Safely converts from signed to unsigned for all signed types
     template <typename T>
     constexpr auto to_unsigned(T n)
-      -> typename std::enable_if_t<std::is_signed<T>::value, make_unsigned_t<T>>
+      -> typename std::enable_if_t<std::is_signed<T>::value, std::make_unsigned_t<T>>
     {
       return
         0 <= n
@@ -99,7 +95,7 @@ namespace iron {
     // Safely converts from unsigned to signed for all cases except `uint64_t`
     template <typename T>
     constexpr auto to_signed(T n) noexcept
-      -> typename std::enable_if_t<std::is_unsigned<T>::value, typename safe_to_int<T>::type>
+      -> typename std::enable_if<std::is_unsigned<T>::value, typename safe_to_int<T>::type>::type
     {
       return static_cast<typename safe_to_int<T>::type>(n);
     }
@@ -451,10 +447,6 @@ namespace iron {
 
 #ifdef attr_const
 #undef attr_const
-#endif
-
-#if _MSC_VER
-#undef constexpr
 #endif
 
 #if __clang__
