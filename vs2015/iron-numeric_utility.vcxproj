@@ -117,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\deps\catch.h" />
+    <ClInclude Include="..\deps\utility\utility.h" />
     <ClInclude Include="..\numeric_utility.h" />
   </ItemGroup>
   <ItemGroup>
