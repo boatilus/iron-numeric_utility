@@ -1,0 +1,11 @@
+version: 1.0.{build}
+configuration:
+- Debug
+- Release
+platform:
+- x86
+- x64
+build:
+  verbosity: minimal
+test_script:
+- cmd: cd C:\projects\iron-utility\vs2015\%PLATFORM%\%CONFIGURATION% && iron-utility.exe

@@ -1,0 +1,12 @@
+# Auto detect text files and perform LF normalization
+# http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
+* text=auto
+
+*.h text
+*.cpp text
+*.md text
+
+# Visual Studio 2015
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.filters text eol=crlf
