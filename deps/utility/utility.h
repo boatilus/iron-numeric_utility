@@ -201,7 +201,7 @@ namespace iron {
 
   template <typename T, typename... Ts>
   struct all_integral<T, Ts...> {
-    static const auto value { std::is_integral<T>::value && all_integral<Ts...>::value };
+    static const auto value = std::is_integral<T>::value && all_integral<Ts...>::value;
   };
   
 
@@ -213,7 +213,7 @@ namespace iron {
 
   template <typename T, typename... Ts>
   struct all_signed<T, Ts...> {
-    static const auto value { std::is_signed<T>::value && all_signed<Ts...>::value };
+    static const auto value = std::is_signed<T>::value && all_signed<Ts...>::value;
   };
   
   

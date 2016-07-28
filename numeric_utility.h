@@ -329,24 +329,30 @@ namespace iron {
     }
 
 
-    /////////
-    // min //
-    /////////
+    ///////////////////////////////////////////////////////////////////////
+    // min                                                               //
+    //                                                                   //
+    // Similar to std::min, but allows comparisons between varying types //
+    ///////////////////////////////////////////////////////////////////////
 
-    template <typename T>
-    constexpr T min(T a, T b) noexcept attr_const { return a < b ? a : b; }
-
-    // TODO: Replace std::is_signed with variadic iron::is_signed
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
-      all_signed<T, U>::value && (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
+    constexpr std::enable_if_t<
+      std::is_same<T, U>::value,
       T
     > min(T a, U b) noexcept attr_const {
+      return a < b ? a : b;
+    }
+
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+      all_signed<T, U>::value && (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
+      T
+      > min(T a, U b) noexcept attr_const {
       return a < static_cast<T>(b) ? a : static_cast<T>(b);
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
+    constexpr std::enable_if_t<
       all_signed<T, U>::value && (std::numeric_limits<U>::max() > std::numeric_limits<T>::max()),
       U
       > min(T a, U b) noexcept attr_const {
@@ -354,7 +360,7 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
+    constexpr std::enable_if_t<
       all_unsigned<T, U>::value && (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
       T
       > min(T a, U b) noexcept attr_const {
@@ -362,7 +368,7 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
+    constexpr std::enable_if_t<
       all_unsigned<T, U>::value && (std::numeric_limits<U>::max() > std::numeric_limits<T>::max()),
       U
       > min(T a, U b) noexcept attr_const {
@@ -370,8 +376,10 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
-      all_signed<T, U>::value && (std::numeric_limits<U>::max() <= std::numeric_limits<T>::max()),
+    constexpr std::enable_if_t<
+      std::is_signed<T>::value
+      && std::is_unsigned<U>::value
+      && (std::numeric_limits<U>::max() <= std::numeric_limits<T>::max()),
       T
     > min(T a, U b) noexcept attr_const {
       // return `a` if it's less than 0, else return the result of the `a` < `b` comparison
@@ -379,10 +387,34 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
-      all_unsigned<T, U>::value && (std::numeric_limits<T>::max() <= std::numeric_limits<U>::max()),
+    constexpr std::enable_if_t<
+      std::is_signed<T>::value
+      && std::is_unsigned<U>::value
+      && (std::numeric_limits<U>::max() > std::numeric_limits<T>::max()),
+      T
+      > min(T a, U b) noexcept attr_const {
+      // return `a` if it's less than 0, else return the result of the `a` < `b` comparison
+      return a < 0 ? a : a < static_cast<T>(b) ? a : static_cast<T>(b);
+    }
+
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+      std::is_unsigned<T>::value
+      && std::is_signed<U>::value
+      && (std::numeric_limits<T>::max() <= std::numeric_limits<U>::max()),
       U
     > min(T a, U b) noexcept attr_const {
+      // return `b` if it's less than 0, else return the result of the `a` < `b` comparison
+      return b < 0 ? b : static_cast<U>(a) < b ? static_cast<U>(a) : b;
+    }
+
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+      std::is_unsigned<T>::value
+      && std::is_signed<U>::value
+      && (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
+      U
+      > min(T a, U b) noexcept attr_const {
       // return `b` if it's less than 0, else return the result of the `a` < `b` comparison
       return b < 0 ? b : static_cast<U>(a) < b ? static_cast<U>(a) : b;
     }
@@ -396,7 +428,7 @@ namespace iron {
     constexpr T max(T a, T b) noexcept attr_const { return a < b ? b : a; }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
+    constexpr std::enable_if_t<
       all_signed<T, U>::value && (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
       T
     > max(T a, U b) noexcept attr_const {
@@ -404,32 +436,34 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
+    constexpr std::enable_if_t<
       all_signed<T, U>::value && (std::numeric_limits<U>::max() > std::numeric_limits<T>::max()),
       U
-      > max(T a, U b) noexcept attr_const {
+    > max(T a, U b) noexcept attr_const {
       return static_cast<U>(a) < b ? b : static_cast<U>(a);
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
+    constexpr std::enable_if_t<
       all_unsigned<T, U>::value && (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
       T
-      > max(T a, U b) noexcept attr_const {
+    > max(T a, U b) noexcept attr_const {
       return a < static_cast<T>(b) ? static_cast<T>(b) : a;
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
+    constexpr std::enable_if_t<
       all_unsigned<T, U>::value && (std::numeric_limits<U>::max() > std::numeric_limits<T>::max()),
       U
-      > max(T a, U b) noexcept attr_const {
+    > max(T a, U b) noexcept attr_const {
       return static_cast<U>(a) < b ? b : static_cast<U>(a);
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
-      all_signed<T, U>::value && (std::numeric_limits<U>::max() <= std::numeric_limits<T>::max()),
+    constexpr std::enable_if_t<
+         std::is_signed<T>::value
+      && std::is_unsigned<U>::value
+      && (std::numeric_limits<U>::max() <= std::numeric_limits<T>::max()),
       T
     > max(T a, U b) noexcept attr_const {
       // return `b` if `a` is less than 0, else return the result of the `a` < `b` comparison
@@ -437,10 +471,12 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr typename std::enable_if_t<
-      all_unsigned<T, U>::value && (std::numeric_limits<T>::max() <= std::numeric_limits<U>::max()),
+    constexpr typename std::enable_if<
+         std::is_unsigned<T>::value
+      && std::is_signed<U>::value
+      && (std::numeric_limits<T>::max() <= std::numeric_limits<U>::max()),
       U
-    > max(T a, U b) noexcept attr_const {
+    >::type max(T a, U b) noexcept attr_const {
       // return `b` if it's less than 0, else return the result of the `a` < `b` comparison
       return b < 0 ? static_cast<U>(a) : static_cast<U>(a) < b ? b : static_cast<U>(a);
     }
