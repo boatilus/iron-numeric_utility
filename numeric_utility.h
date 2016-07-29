@@ -17,9 +17,10 @@
 
 #include <cstdint>
 #include <limits>
+#include <stdexcept>
 #include <type_traits>
 
-#include "deps\utility\utility.h"
+#include "deps/utility/utility.h"
 
 #if __clang__
 #define attr_const __attribute__((const))
@@ -37,7 +38,7 @@ namespace iron {
     //////////////////////
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, bool> is_positive(
+    constexpr std::enable_if_t<std::is_integral<T>::value, bool> is_positive(
       T n
     ) noexcept attr_const {
       return n > 0;
@@ -45,37 +46,40 @@ namespace iron {
 
     // TODO
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_floating_point<T>::value, bool> is_positive(
+    constexpr std::enable_if_t<std::is_floating_point<T>::value, bool> is_positive(
       T n
     ) noexcept attr_const {
       return n;
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, bool> is_negative(
+    constexpr std::enable_if_t<std::is_integral<T>::value, bool> is_negative(
       T n
     ) noexcept attr_const {
       return n < 0;
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, T> to_positive(
+    constexpr std::enable_if_t<std::is_signed<T>::value, T> to_positive(
       T n
     ) noexcept attr_const {
+      if (std::numeric_limits<T>::min() == n) {
+        throw std::range_error("insufficient range to cast to a positive value");
+      }
+    
       return n > 0 ? n : -(n);
     }
 
     // TODO
-    // For some reason, VC rejects enable_if_t here, but lets the enable_if dance pass unscathed
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_floating_point<T>::value, T> to_positive(
+    constexpr std::enable_if_t<std::is_floating_point<T>::value, T> to_positive(
       T n
     ) noexcept attr_const {
       return n;
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, T> to_negative(
+    constexpr std::enable_if_t<std::is_integral<T>::value, T> to_negative(
       T n
     ) noexcept attr_const {
       return n < 0 ? n : -(n);
@@ -85,23 +89,39 @@ namespace iron {
     // Safely converts from signed to unsigned for all signed types
     template <typename T>
     constexpr auto to_unsigned(T n)
-      -> typename std::enable_if_t<std::is_signed<T>::value, std::make_unsigned_t<T>>
+      -> std::enable_if_t<std::is_signed<T>::value, std::make_unsigned_t<T>>
     {
-      return
-        0 <= n
-        ? static_cast<std::make_unsigned_t<T>>(n)
-        : throw std::range_error("conversion of negative value to unsigned is unsafe");
+      if (0 <= n) {
+        return static_cast<std::make_unsigned_t<T>>(n);
+      } else {
+        throw std::range_error("conversion of negative value to unsigned is unsafe");
+      }
     }
 
-
+    
+    // Safely converts from unsigned to signed for all cases except `uint64_t`
+    constexpr auto to_signed(uint8_t n) noexcept attr_const { return static_cast<int16_t>(n); }
+    constexpr auto to_signed(uint16_t n) noexcept attr_const { return static_cast<int32_t>(n); }
+    constexpr auto to_signed(uint32_t n) noexcept attr_const { return static_cast<int64_t>(n); }
+    
+    constexpr auto to_signed(uint64_t n) noexcept attr_const {
+      if (std::numeric_limits<int64_t>::max() >= n) {
+        return static_cast<int64_t>(n);
+      } else {
+        throw std::range_error("conversion of signed value to unsigned is unsafe");
+      }
+    }
+    
+    /*
     // Safely converts from unsigned to signed for all cases except `uint64_t`
     template <typename T>
     constexpr auto to_signed(T n) noexcept
-      -> typename std::enable_if<std::is_unsigned<T>::value, typename safe_to_int<T>::type>::type
+      -> std::enable_if_t<std::is_unsigned<T>::value, typename safe_to_int<T>::type>
     {
       return static_cast<typename safe_to_int<T>::type>(n);
     }
-
+    */
+    
 
     /////////////////////
     // Integral bounds //
@@ -109,8 +129,8 @@ namespace iron {
 
     // Clamps an integer within [`lower`, `upper`]
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, T> clamp(
-      T value, T lower, T upper
+    constexpr std::enable_if_t<std::is_integral<T>::value, T> clamp(
+      T value, T lower, T upper   
     ) noexcept attr_const {
       return value < lower ? lower : value > upper ? upper : value;
     }
@@ -118,7 +138,7 @@ namespace iron {
 
     // Return value if within [`min`, `max`], else throw `std::out_of_range`
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, T> check_range(
+    constexpr std::enable_if_t<std::is_integral<T>::value, T> check_range(
       T value, T lower, T upper
     ) {
       return   ((value >= lower) && (value <= upper))
@@ -133,7 +153,7 @@ namespace iron {
 
     // Addition
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, bool> is_addition_safe(
+    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_addition_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return
@@ -144,7 +164,7 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_unsigned<T>::value, bool> is_addition_safe(
+    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_addition_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return lhs >(std::numeric_limits<T>::max() - rhs) ? false : true;
@@ -153,7 +173,7 @@ namespace iron {
 
     // Subtraction
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, bool> is_subtraction_safe(
+    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_subtraction_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return
@@ -164,7 +184,7 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_unsigned<T>::value, bool> is_subtraction_safe(
+    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_subtraction_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return lhs < rhs ? false : true;
@@ -173,7 +193,7 @@ namespace iron {
 
     // Multiplication
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, bool> is_multiplication_safe(
+    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_multiplication_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return
@@ -183,7 +203,7 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_unsigned<T>::value, bool> is_multiplication_safe(
+    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_multiplication_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return lhs > (std::numeric_limits<T>::max() / rhs) ? false : true;
@@ -192,7 +212,7 @@ namespace iron {
 
     // Division
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, bool> is_division_safe(
+    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_division_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return
@@ -202,7 +222,7 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_unsigned<T>::value, bool> is_division_safe(
+    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_division_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return (0 == rhs) || (0 == lhs) ? false : true;
@@ -211,7 +231,7 @@ namespace iron {
 
     // Modulo
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, bool> is_modulo_safe(
+    constexpr std::enable_if_t<std::is_integral<T>::value, bool> is_modulo_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return is_division_safe(lhs, rhs);
@@ -220,7 +240,7 @@ namespace iron {
 
     // Left shift
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, bool> is_left_shift_safe(
+    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_left_shift_safe(
       T lhs, T rhs
     ) noexcept attr_const {
       return
@@ -235,7 +255,7 @@ namespace iron {
 
     // Unary negation
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, bool> is_unary_negation_safe(
+    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_unary_negation_safe(
       T value
     ) noexcept attr_const {
       return std::numeric_limits<T>::min() == value ? false : true;
@@ -255,7 +275,7 @@ namespace iron {
 
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, uint32_t> power(
+    constexpr std::enable_if_t<std::is_signed<T>::value, uint32_t> power(
       T base, T exponent
     ) {
       return
@@ -265,7 +285,7 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_unsigned<T>::value, uint32_t> power(
+    constexpr std::enable_if_t<std::is_unsigned<T>::value, uint32_t> power(
       T base, T exponent
     ) {
       return
@@ -288,7 +308,7 @@ namespace iron {
     // Computes the number of digits in an integer
     // Does less-than comparisons to 7 digits, then gives up and recurses
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_unsigned<T>::value, uint32_t> num_digits(
+    constexpr std::enable_if_t<std::is_unsigned<T>::value, uint32_t> num_digits(
       T n
     ) noexcept attr_const {
       return  n < 10U ? 1U :
@@ -302,7 +322,7 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_signed<T>::value, uint32_t> num_digits(
+    constexpr std::enable_if_t<std::is_signed<T>::value, uint32_t> num_digits(
       T n
     ) noexcept attr_const {
       return num_digits(to_unsigned(to_positive(n)));
@@ -322,7 +342,7 @@ namespace iron {
     ///////////////////////
 
     template <typename T>
-    constexpr typename std::enable_if_t<std::is_integral<T>::value, T> round_up(
+    constexpr std::enable_if_t<std::is_integral<T>::value, T> round_up(
       T n, T multiple
     ) noexcept attr_const {
       return multiple != 0 ? ((n + multiple - 1) / multiple) * multiple : 0;

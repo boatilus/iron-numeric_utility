@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		E4EC89AB1D48544400CFD7B5 /* is_positive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89AA1D48544400CFD7B5 /* is_positive.cpp */; };
+		E4EC89AE1D4AEF7B00CFD7B5 /* is_negative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89AD1D4AEF7B00CFD7B5 /* is_negative.cpp */; };
+		E4EC89B01D4AF0F200CFD7B5 /* to_positive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89AF1D4AF0F200CFD7B5 /* to_positive.cpp */; };
+		E4EC89B21D4AF8AF00CFD7B5 /* to_unsigned.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89B11D4AF8AF00CFD7B5 /* to_unsigned.cpp */; };
+		E4EC89B41D4AFD8D00CFD7B5 /* to_signed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89B31D4AFD8D00CFD7B5 /* to_signed.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,6 +31,11 @@
 		E4EC89A81D48543200CFD7B5 /* numeric_utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = numeric_utility.h; path = ../numeric_utility.h; sourceTree = "<group>"; };
 		E4EC89A91D48543A00CFD7B5 /* catch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = catch.h; path = ../deps/catch.h; sourceTree = "<group>"; };
 		E4EC89AA1D48544400CFD7B5 /* is_positive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_positive.cpp; path = ../test/is_positive.cpp; sourceTree = "<group>"; };
+		E4EC89AC1D49A5BE00CFD7B5 /* utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utility.h; path = ../deps/utility/utility.h; sourceTree = "<group>"; };
+		E4EC89AD1D4AEF7B00CFD7B5 /* is_negative.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_negative.cpp; path = ../test/is_negative.cpp; sourceTree = "<group>"; };
+		E4EC89AF1D4AF0F200CFD7B5 /* to_positive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_positive.cpp; path = ../test/to_positive.cpp; sourceTree = "<group>"; };
+		E4EC89B11D4AF8AF00CFD7B5 /* to_unsigned.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_unsigned.cpp; path = ../test/to_unsigned.cpp; sourceTree = "<group>"; };
+		E4EC89B31D4AFD8D00CFD7B5 /* to_signed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_signed.cpp; path = ../test/to_signed.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +52,11 @@
 		E4EC89951D484CF800CFD7B5 = {
 			isa = PBXGroup;
 			children = (
+				E4EC89B31D4AFD8D00CFD7B5 /* to_signed.cpp */,
+				E4EC89B11D4AF8AF00CFD7B5 /* to_unsigned.cpp */,
+				E4EC89AF1D4AF0F200CFD7B5 /* to_positive.cpp */,
+				E4EC89AD1D4AEF7B00CFD7B5 /* is_negative.cpp */,
+				E4EC89AC1D49A5BE00CFD7B5 /* utility.h */,
 				E4EC89AA1D48544400CFD7B5 /* is_positive.cpp */,
 				E4EC89A91D48543A00CFD7B5 /* catch.h */,
 				E4EC89A81D48543200CFD7B5 /* numeric_utility.h */,
@@ -114,7 +128,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4EC89B01D4AF0F200CFD7B5 /* to_positive.cpp in Sources */,
+				E4EC89AE1D4AEF7B00CFD7B5 /* is_negative.cpp in Sources */,
 				E4EC89AB1D48544400CFD7B5 /* is_positive.cpp in Sources */,
+				E4EC89B41D4AFD8D00CFD7B5 /* to_signed.cpp in Sources */,
+				E4EC89B21D4AF8AF00CFD7B5 /* to_unsigned.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
