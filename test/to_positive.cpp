@@ -16,8 +16,10 @@ TEST_CASE("to_positive() returns all correct results given valid arguments") {
 }
 
 TEST_CASE("to_postive() with any <int>::min() should throw") {
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#endif
   
   try {
     iron::numeric::to_positive(std::numeric_limits<int8_t>::min());
@@ -42,6 +44,8 @@ TEST_CASE("to_postive() with any <int>::min() should throw") {
   } catch (std::exception& e) {
     REQUIRE(e.what());
   }
-  
+ 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 }

@@ -62,7 +62,7 @@ namespace iron {
     template <typename T>
     constexpr std::enable_if_t<std::is_signed<T>::value, T> to_positive(
       T n
-    ) noexcept attr_const {
+    ) attr_const {
       if (std::numeric_limits<T>::min() == n) {
         throw std::range_error("insufficient range to cast to a positive value");
       }
@@ -104,12 +104,10 @@ namespace iron {
     constexpr auto to_signed(uint16_t n) noexcept attr_const { return static_cast<int32_t>(n); }
     constexpr auto to_signed(uint32_t n) noexcept attr_const { return static_cast<int64_t>(n); }
     
-    constexpr auto to_signed(uint64_t n) noexcept attr_const {
-      if (std::numeric_limits<int64_t>::max() >= n) {
-        return static_cast<int64_t>(n);
-      } else {
-        throw std::range_error("conversion of signed value to unsigned is unsafe");
-      }
+    constexpr auto to_signed(uint64_t n) attr_const {
+      return static_cast<uint64_t>(std::numeric_limits<int64_t>::max()) >= n
+        ? static_cast<int64_t>(n)
+        : throw std::range_error("conversion of signed value to unsigned is unsafe");
     }
     
     /*

@@ -22,6 +22,9 @@
     <None Include="..\README.md" />
     <None Include="..\.gitattributes" />
     <None Include="..\.gitignore" />
+    <None Include="..\test\Makefile">
+      <Filter>Test Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\numeric_utility.h">
@@ -36,6 +39,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test\is_positive.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\is_negative.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\to_positive.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\to_signed.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\to_unsigned.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -156,6 +156,7 @@
     <None Include="..\.gitignore" />
     <None Include="..\LICENSE.md" />
     <None Include="..\README.md" />
+    <None Include="..\test\Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\deps\catch.h" />
@@ -163,7 +164,11 @@
     <ClInclude Include="..\numeric_utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\test\is_negative.cpp" />
     <ClCompile Include="..\test\is_positive.cpp" />
+    <ClCompile Include="..\test\to_positive.cpp" />
+    <ClCompile Include="..\test\to_signed.cpp" />
+    <ClCompile Include="..\test\to_unsigned.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

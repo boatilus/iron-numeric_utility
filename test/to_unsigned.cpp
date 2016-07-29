@@ -19,8 +19,10 @@ TEST_CASE("to_unsigned() returns all correct results given valid arguments") {
 }
 
 TEST_CASE("to_unsigned() with any negative value should throw") {
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#endif
   using namespace iron::numeric;
   
   try {
@@ -34,6 +36,8 @@ TEST_CASE("to_unsigned() with any negative value should throw") {
   } catch (std::exception& e) {
     REQUIRE(e.what());
   }
-  
+
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 }

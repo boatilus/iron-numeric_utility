@@ -8,7 +8,7 @@ TEST_CASE("to_signed() returns all correct results") {
   constexpr uint8_t  u8  { 0 };
   constexpr uint16_t u16 { 8881 };
   constexpr uint32_t u32 { std::numeric_limits<uint32_t>::max() };
-  constexpr uint64_t u64 { std::numeric_limits<int64_t>::max() };
+  constexpr uint64_t u64 { static_cast<uint64_t>(std::numeric_limits<int64_t>::max()) };
   
   static_assert(u16 == to_signed(u16), "to_signed() should be constexpr callable");
   
@@ -19,8 +19,10 @@ TEST_CASE("to_signed() returns all correct results") {
 }
 
 TEST_CASE("to_signed() with a value exceeding INT64_MAX should throw") {
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#endif
   using namespace iron::numeric;
   
   try {
@@ -29,5 +31,7 @@ TEST_CASE("to_signed() with a value exceeding INT64_MAX should throw") {
     REQUIRE(e.what());
   }
   
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 }
