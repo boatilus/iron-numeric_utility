@@ -164,8 +164,11 @@
     <ClInclude Include="..\numeric_utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\test\clamp.cpp" />
+    <ClCompile Include="..\test\is_addition_safe.cpp" />
     <ClCompile Include="..\test\is_negative.cpp" />
     <ClCompile Include="..\test\is_positive.cpp" />
+    <ClCompile Include="..\test\is_subtraction_safe.cpp" />
     <ClCompile Include="..\test\to_positive.cpp" />
     <ClCompile Include="..\test\to_signed.cpp" />
     <ClCompile Include="..\test\to_unsigned.cpp" />
