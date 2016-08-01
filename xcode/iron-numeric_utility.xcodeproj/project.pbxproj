@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E4EC89AB1D48544400CFD7B5 /* is_positive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89AA1D48544400CFD7B5 /* is_positive.cpp */; };
-		E4EC89AE1D4AEF7B00CFD7B5 /* is_negative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89AD1D4AEF7B00CFD7B5 /* is_negative.cpp */; };
-		E4EC89B01D4AF0F200CFD7B5 /* to_positive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89AF1D4AF0F200CFD7B5 /* to_positive.cpp */; };
-		E4EC89B21D4AF8AF00CFD7B5 /* to_unsigned.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89B11D4AF8AF00CFD7B5 /* to_unsigned.cpp */; };
-		E4EC89B41D4AFD8D00CFD7B5 /* to_signed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EC89B31D4AFD8D00CFD7B5 /* to_signed.cpp */; };
+		E4812C811D4ED163002AC315 /* clamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C7A1D4ED163002AC315 /* clamp.cpp */; };
+		E4812C821D4ED163002AC315 /* is_addition_safe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C7B1D4ED163002AC315 /* is_addition_safe.cpp */; };
+		E4812C831D4ED163002AC315 /* is_negative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C7C1D4ED163002AC315 /* is_negative.cpp */; };
+		E4812C841D4ED163002AC315 /* is_positive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C7D1D4ED163002AC315 /* is_positive.cpp */; };
+		E4812C851D4ED163002AC315 /* to_positive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C7E1D4ED163002AC315 /* to_positive.cpp */; };
+		E4812C861D4ED163002AC315 /* to_signed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C7F1D4ED163002AC315 /* to_signed.cpp */; };
+		E4812C871D4ED163002AC315 /* to_unsigned.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C801D4ED163002AC315 /* to_unsigned.cpp */; };
+		E4812C891D4ED27C002AC315 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = E4812C881D4ED27C002AC315 /* Makefile */; };
+		E4AAE8E01D4F063A00374248 /* is_subtraction_safe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4AAE8DF1D4F063A00374248 /* is_subtraction_safe.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,15 +31,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E4812C7A1D4ED163002AC315 /* clamp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = clamp.cpp; path = ../test/clamp.cpp; sourceTree = "<group>"; };
+		E4812C7B1D4ED163002AC315 /* is_addition_safe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_addition_safe.cpp; path = ../test/is_addition_safe.cpp; sourceTree = "<group>"; };
+		E4812C7C1D4ED163002AC315 /* is_negative.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_negative.cpp; path = ../test/is_negative.cpp; sourceTree = "<group>"; };
+		E4812C7D1D4ED163002AC315 /* is_positive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_positive.cpp; path = ../test/is_positive.cpp; sourceTree = "<group>"; };
+		E4812C7E1D4ED163002AC315 /* to_positive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_positive.cpp; path = ../test/to_positive.cpp; sourceTree = "<group>"; };
+		E4812C7F1D4ED163002AC315 /* to_signed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_signed.cpp; path = ../test/to_signed.cpp; sourceTree = "<group>"; };
+		E4812C801D4ED163002AC315 /* to_unsigned.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_unsigned.cpp; path = ../test/to_unsigned.cpp; sourceTree = "<group>"; };
+		E4812C881D4ED27C002AC315 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../test/Makefile; sourceTree = "<group>"; };
+		E4AAE8DF1D4F063A00374248 /* is_subtraction_safe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_subtraction_safe.cpp; path = ../test/is_subtraction_safe.cpp; sourceTree = "<group>"; };
 		E4EC899E1D484CF900CFD7B5 /* iron-numeric_utility */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "iron-numeric_utility"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4EC89A81D48543200CFD7B5 /* numeric_utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = numeric_utility.h; path = ../numeric_utility.h; sourceTree = "<group>"; };
 		E4EC89A91D48543A00CFD7B5 /* catch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = catch.h; path = ../deps/catch.h; sourceTree = "<group>"; };
-		E4EC89AA1D48544400CFD7B5 /* is_positive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_positive.cpp; path = ../test/is_positive.cpp; sourceTree = "<group>"; };
 		E4EC89AC1D49A5BE00CFD7B5 /* utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utility.h; path = ../deps/utility/utility.h; sourceTree = "<group>"; };
-		E4EC89AD1D4AEF7B00CFD7B5 /* is_negative.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_negative.cpp; path = ../test/is_negative.cpp; sourceTree = "<group>"; };
-		E4EC89AF1D4AF0F200CFD7B5 /* to_positive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_positive.cpp; path = ../test/to_positive.cpp; sourceTree = "<group>"; };
-		E4EC89B11D4AF8AF00CFD7B5 /* to_unsigned.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_unsigned.cpp; path = ../test/to_unsigned.cpp; sourceTree = "<group>"; };
-		E4EC89B31D4AFD8D00CFD7B5 /* to_signed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_signed.cpp; path = ../test/to_signed.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,12 +60,16 @@
 		E4EC89951D484CF800CFD7B5 = {
 			isa = PBXGroup;
 			children = (
-				E4EC89B31D4AFD8D00CFD7B5 /* to_signed.cpp */,
-				E4EC89B11D4AF8AF00CFD7B5 /* to_unsigned.cpp */,
-				E4EC89AF1D4AF0F200CFD7B5 /* to_positive.cpp */,
-				E4EC89AD1D4AEF7B00CFD7B5 /* is_negative.cpp */,
+				E4AAE8DF1D4F063A00374248 /* is_subtraction_safe.cpp */,
+				E4812C881D4ED27C002AC315 /* Makefile */,
+				E4812C7A1D4ED163002AC315 /* clamp.cpp */,
+				E4812C7B1D4ED163002AC315 /* is_addition_safe.cpp */,
+				E4812C7C1D4ED163002AC315 /* is_negative.cpp */,
+				E4812C7D1D4ED163002AC315 /* is_positive.cpp */,
+				E4812C7E1D4ED163002AC315 /* to_positive.cpp */,
+				E4812C7F1D4ED163002AC315 /* to_signed.cpp */,
+				E4812C801D4ED163002AC315 /* to_unsigned.cpp */,
 				E4EC89AC1D49A5BE00CFD7B5 /* utility.h */,
-				E4EC89AA1D48544400CFD7B5 /* is_positive.cpp */,
 				E4EC89A91D48543A00CFD7B5 /* catch.h */,
 				E4EC89A81D48543200CFD7B5 /* numeric_utility.h */,
 				E4EC899F1D484CF900CFD7B5 /* Products */,
@@ -128,11 +140,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4EC89B01D4AF0F200CFD7B5 /* to_positive.cpp in Sources */,
-				E4EC89AE1D4AEF7B00CFD7B5 /* is_negative.cpp in Sources */,
-				E4EC89AB1D48544400CFD7B5 /* is_positive.cpp in Sources */,
-				E4EC89B41D4AFD8D00CFD7B5 /* to_signed.cpp in Sources */,
-				E4EC89B21D4AF8AF00CFD7B5 /* to_unsigned.cpp in Sources */,
+				E4AAE8E01D4F063A00374248 /* is_subtraction_safe.cpp in Sources */,
+				E4812C871D4ED163002AC315 /* to_unsigned.cpp in Sources */,
+				E4812C831D4ED163002AC315 /* is_negative.cpp in Sources */,
+				E4812C821D4ED163002AC315 /* is_addition_safe.cpp in Sources */,
+				E4812C841D4ED163002AC315 /* is_positive.cpp in Sources */,
+				E4812C851D4ED163002AC315 /* to_positive.cpp in Sources */,
+				E4812C861D4ED163002AC315 /* to_signed.cpp in Sources */,
+				E4812C891D4ED27C002AC315 /* Makefile in Sources */,
+				E4812C811D4ED163002AC315 /* clamp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

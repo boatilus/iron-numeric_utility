@@ -126,46 +126,98 @@ namespace iron {
     /////////////////////
 
     // Clamps an integer within [`lower`, `upper`]
+    /*
     template <typename T>
     constexpr std::enable_if_t<std::is_integral<T>::value, T> clamp(
-      T value, T lower, T upper   
+      T n, T lower, T upper
+    ) attr_const {
+      if (lower > upper) {
+        throw std::invalid_argument("lower bound mustn't be greater than upper bound");
+      }
+    
+      if (n < lower) {
+        return lower;
+      } else if (n > upper) {
+        return upper;
+      } else {
+        return n;
+      }
+    }
+    */
+    
+    // Clamps an integer within [`lower`, `upper`], throwing exception if `lower`'s not less than or
+    // equal to `upper`
+    template <typename T, typename LT, typename UT>
+    constexpr std::enable_if_t<all_integral<T, LT, UT>::value, T> clamp(T n, LT lower, UT upper) {
+      if (lower > upper) {
+        throw std::invalid_argument("lower bound must not be greater than upper bound");
+      }
+    
+      if (n < lower) {
+        return static_cast<T>(lower);
+      } else if (n > upper) {
+        return static_cast<T>(upper);
+      } else {
+        return n;
+      }
+    }
+    
+    
+    // Clamps an integer within [`lower`, `upper]
+    template <typename T, T lower, T upper>
+    constexpr std::enable_if_t<std::is_integral<T>::value && (upper >= lower), T> restrict_within(
+      const T n
     ) noexcept attr_const {
-      return value < lower ? lower : value > upper ? upper : value;
+      if (n < lower) {
+        return lower;
+      } else if (n > upper) {
+        return upper;
+      } else {
+        return n;
+      }
     }
 
 
     // Return value if within [`min`, `max`], else throw `std::out_of_range`
     template <typename T>
     constexpr std::enable_if_t<std::is_integral<T>::value, T> check_range(
-      T value, T lower, T upper
+      T n, T lower, T upper
     ) {
-      return   ((value >= lower) && (value <= upper))
-        ? value
-        : throw std::out_of_range("value not within range");
+      if ((n >= lower) && (n <= upper)) {
+        return n;
+      } else {
+        throw std::out_of_range("value not within range");
+      }
     }
 
 
     /////////////////////////////
     // Integral safe operation //
     /////////////////////////////
-
+  
     // Addition
-    template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_addition_safe(
-      T lhs, T rhs
-    ) noexcept attr_const {
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+      std::is_signed<T>::value && std::is_integral<U>::value, bool
+    > is_addition_safe(T lhs, U rhs) noexcept attr_const {
+      if (std::numeric_limits<T>::max() < rhs) return false;
+      
+      const auto _rhs { static_cast<T>(rhs) };
+    
       return
-        ((rhs > 0) && (lhs > (std::numeric_limits<T>::max() - rhs))) ||
-        ((rhs < 0) && (lhs < (std::numeric_limits<T>::min() - rhs)))
+        ((_rhs > 0) && (lhs > (std::numeric_limits<T>::max() - _rhs))) ||
+        ((_rhs < 0) && (lhs < (std::numeric_limits<T>::min() - _rhs)))
         ? false
         : true;
     }
 
-    template <typename T>
-    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_addition_safe(
-      T lhs, T rhs
-    ) noexcept attr_const {
-      return lhs >(std::numeric_limits<T>::max() - rhs) ? false : true;
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+      std::is_unsigned<T>::value && std::is_integral<U>::value, bool
+    > is_addition_safe(T lhs, U rhs) noexcept attr_const {
+      if (std::numeric_limits<T>::max() < rhs) return false;
+    
+      return lhs > (std::numeric_limits<T>::max() - static_cast<T>(rhs)) ? false : true;
     }
 
 
