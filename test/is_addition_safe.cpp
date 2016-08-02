@@ -60,27 +60,19 @@ TEST_CASE("is_addition_safe() for unsigned values returns true if addition op is
   REQUIRE(true == is_addition_safe(std::numeric_limits<uint32_t>::max(), 0));
   REQUIRE(true == is_addition_safe(std::numeric_limits<uint64_t>::max(), 0));
   
-  auto fut1 = std::async(std::launch::async, []{
+  {
     using t = uint8_t;
     
     for (size_t i = 1; i < (static_cast<size_t>(std::numeric_limits<t>::max()) * 2); ++i) {
-      if (true == is_addition_safe(std::numeric_limits<t>::max(), i)) {
-        std::cerr << i << std::endl;
-        
-        break;
-      }
+      CHECK(false == is_addition_safe(std::numeric_limits<t>::max(), i));
     }
-  });
+  }
   
-  auto fut2 = std::async(std::launch::async, []{
+  {
     using t = uint16_t;
     
     for (size_t i = 1; i < (static_cast<size_t>(std::numeric_limits<t>::max()) * 2); ++i) {
-      if (true == is_addition_safe(std::numeric_limits<t>::max(), i)) {
-        std::cerr << i << std::endl;
-        
-        break;
-      }
+      CHECK(false == is_addition_safe(std::numeric_limits<t>::max(), i));
     }
-  });
+  }
 }
