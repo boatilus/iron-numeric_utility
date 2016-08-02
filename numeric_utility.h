@@ -200,7 +200,7 @@ namespace iron {
     constexpr std::enable_if_t<
       std::is_signed<T>::value && std::is_integral<U>::value, bool
     > is_addition_safe(T lhs, U rhs) noexcept attr_const {
-      if (std::numeric_limits<T>::max() < to_signed(rhs)) return false;
+      if (std::numeric_limits<T>::max() < static_cast<intmax_t>(rhs)) return false;
       
       const auto _rhs { static_cast<T>(rhs) };
     
@@ -215,7 +215,7 @@ namespace iron {
     constexpr std::enable_if_t<
       std::is_unsigned<T>::value && std::is_integral<U>::value, bool
     > is_addition_safe(T lhs, U rhs) noexcept attr_const {
-      if (std::numeric_limits<T>::max() < to_unsigned(rhs)) return false;
+      if (std::numeric_limits<T>::max() < static_cast<uintmax_t>(rhs)) return false;
     
       return lhs > (std::numeric_limits<T>::max() - static_cast<T>(rhs)) ? false : true;
     }
