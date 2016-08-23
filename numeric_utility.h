@@ -62,12 +62,12 @@ namespace iron {
     template <typename T>
     constexpr std::enable_if_t<std::is_signed<T>::value, T> to_positive(
       T n
-    ) attr_const {
-      if (std::numeric_limits<T>::min() == n) {
-        throw std::range_error("insufficient range to cast to a positive value");
-      }
-    
-      return n > 0 ? n : -(n);
+    ) {
+      return std::numeric_limits<T>::min() == n
+        ? throw std::range_error("insufficient range to cast to a positive value")
+        : n > 0
+        ? n
+        : (-n);
     }
 
     // TODO
@@ -91,11 +91,9 @@ namespace iron {
     constexpr auto to_unsigned(T n)
       -> std::enable_if_t<std::is_signed<T>::value, std::make_unsigned_t<T>>
     {
-      if (0 <= n) {
-        return static_cast<std::make_unsigned_t<T>>(n);
-      } else {
-        throw std::range_error("conversion of negative value to unsigned is unsafe");
-      }
+      return 0 <= n
+        ? static_cast<std::make_unsigned_t<T>>(n)
+        : throw std::range_error("conversion of negative value to unsigned is unsafe");
     }
 
     
