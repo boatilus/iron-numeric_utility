@@ -147,11 +147,19 @@ namespace iron {
     
     // Clamps an integer within [`lower`, `upper`], throwing exception if `lower`'s not less than or
     // equal to `upper`
+    namespace internal {
+      template <typename T, typename U>
+      constexpr void check_clamp_range(T lower, U upper) {
+        lower > upper
+          ? throw std::invalid_argument("lower bound must not be greater than upper bound")
+          : 0;
+      }
+    }
+    
+    
     template <typename T, typename LT, typename UT>
     constexpr std::enable_if_t<all_integral<T, LT, UT>::value, T> clamp(T n, LT lower, UT upper) {
-      if (lower > upper) {
-        throw std::invalid_argument("lower bound must not be greater than upper bound");
-      }
+      internal::check_clamp_range(lower, upper);
     
       if (n < lower) {
         return static_cast<T>(lower);
