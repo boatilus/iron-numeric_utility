@@ -24,8 +24,6 @@
 
 #if __clang__
 #define attr_const __attribute__((const))
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wgcc-compat" // "GCC does not allow const attribute in this position..."
 #else
 #define attr_const
 #endif
@@ -38,24 +36,24 @@ namespace iron {
     //////////////////////
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_integral<T>::value, bool> is_positive(
+    constexpr attr_const std::enable_if_t<std::is_integral<T>::value, bool> is_positive(
       T n
-    ) noexcept attr_const {
+    ) noexcept {
       return n > 0;
     }
 
     // TODO
     template <typename T>
-    constexpr std::enable_if_t<std::is_floating_point<T>::value, bool> is_positive(
+    constexpr attr_const std::enable_if_t<std::is_floating_point<T>::value, bool> is_positive(
       T n
-    ) noexcept attr_const {
+    ) noexcept {
       return n;
     }
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_integral<T>::value, bool> is_negative(
+    constexpr attr_const std::enable_if_t<std::is_integral<T>::value, bool> is_negative(
       T n
-    ) noexcept attr_const {
+    ) noexcept {
       return n < 0;
     }
 
@@ -72,16 +70,16 @@ namespace iron {
 
     // TODO
     template <typename T>
-    constexpr std::enable_if_t<std::is_floating_point<T>::value, T> to_positive(
+    constexpr attr_const std::enable_if_t<std::is_floating_point<T>::value, T> to_positive(
       T n
-    ) noexcept attr_const {
+    ) noexcept {
       return n;
     }
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_integral<T>::value, T> to_negative(
+    constexpr attr_const std::enable_if_t<std::is_integral<T>::value, T> to_negative(
       T n
-    ) noexcept attr_const {
+    ) noexcept {
       return n < 0 ? n : -(n);
     }
 
@@ -98,11 +96,11 @@ namespace iron {
 
     
     // Safely converts from unsigned to signed for all cases except `uint64_t`
-    constexpr auto to_signed(uint8_t n) noexcept attr_const { return static_cast<int16_t>(n); }
-    constexpr auto to_signed(uint16_t n) noexcept attr_const { return static_cast<int32_t>(n); }
-    constexpr auto to_signed(uint32_t n) noexcept attr_const { return static_cast<int64_t>(n); }
+    constexpr attr_const auto to_signed(uint8_t n) noexcept { return static_cast<int16_t>(n); }
+    constexpr attr_const auto to_signed(uint16_t n) noexcept { return static_cast<int32_t>(n); }
+    constexpr attr_const auto to_signed(uint32_t n) noexcept { return static_cast<int64_t>(n); }
     
-    constexpr auto to_signed(uint64_t n) attr_const {
+    constexpr auto to_signed(uint64_t n) {
       return static_cast<uint64_t>(std::numeric_limits<int64_t>::max()) >= n
         ? static_cast<int64_t>(n)
         : throw std::range_error("conversion of signed value to unsigned is unsafe");
@@ -171,9 +169,9 @@ namespace iron {
     
     // Clamps an integer within [`lower`, `upper]
     template <typename T, T lower, T upper>
-    constexpr std::enable_if_t<std::is_integral<T>::value && (upper >= lower), T> restrict_within(
-      const T n
-    ) noexcept attr_const {
+    constexpr attr_const std::enable_if_t<
+      std::is_integral<T>::value && (upper >= lower), T
+    > restrict_within(const T n) noexcept {
       if (n < lower) {
         return lower;
       } else if (n > upper) {
@@ -203,9 +201,9 @@ namespace iron {
   
     // Addition
     template <typename T, typename U>
-    constexpr std::enable_if_t<
+    constexpr attr_const std::enable_if_t<
       std::is_signed<T>::value && std::is_integral<U>::value, bool
-    > is_addition_safe(T lhs, U rhs) noexcept attr_const {
+    > is_addition_safe(T lhs, U rhs) noexcept {
       if (std::numeric_limits<T>::max() < static_cast<intmax_t>(rhs)) return false;
       
       const auto _rhs { static_cast<T>(rhs) };
@@ -218,9 +216,9 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr std::enable_if_t<
+    constexpr attr_const std::enable_if_t<
       std::is_unsigned<T>::value && std::is_integral<U>::value, bool
-    > is_addition_safe(T lhs, U rhs) noexcept attr_const {
+    > is_addition_safe(T lhs, U rhs) noexcept {
       if (std::numeric_limits<T>::max() < static_cast<uintmax_t>(rhs)) return false;
     
       return lhs > (std::numeric_limits<T>::max() - static_cast<T>(rhs)) ? false : true;
@@ -229,9 +227,9 @@ namespace iron {
 
     // Subtraction
     template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_subtraction_safe(
+    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, bool> is_subtraction_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return
         ((rhs > 0) && (lhs < (std::numeric_limits<T>::min() + rhs))) ||
         ((rhs < 0) && (lhs > (std::numeric_limits<T>::max() + rhs)))
@@ -240,18 +238,18 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_subtraction_safe(
+    constexpr attr_const std::enable_if_t<std::is_unsigned<T>::value, bool> is_subtraction_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return lhs < rhs ? false : true;
     }
 
 
     // Multiplication
     template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_multiplication_safe(
+    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, bool> is_multiplication_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return
         to_positive(lhs) >(std::numeric_limits<T>::max() / to_positive(rhs))
         ? false
@@ -259,18 +257,18 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_multiplication_safe(
+    constexpr attr_const std::enable_if_t<std::is_unsigned<T>::value, bool> is_multiplication_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return lhs > (std::numeric_limits<T>::max() / rhs) ? false : true;
     }
 
 
     // Division
     template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_division_safe(
+    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, bool> is_division_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return
         (0 == rhs) || ((std::numeric_limits<T>::min() == lhs) && (-1 == rhs))
         ? false
@@ -278,27 +276,27 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_unsigned<T>::value, bool> is_division_safe(
+    constexpr attr_const std::enable_if_t<std::is_unsigned<T>::value, bool> is_division_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return (0 == rhs) || (0 == lhs) ? false : true;
     }
 
 
     // Modulo
     template <typename T>
-    constexpr std::enable_if_t<std::is_integral<T>::value, bool> is_modulo_safe(
+    constexpr attr_const std::enable_if_t<std::is_integral<T>::value, bool> is_modulo_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return is_division_safe(lhs, rhs);
     }
 
 
     // Left shift
     template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_left_shift_safe(
+    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, bool> is_left_shift_safe(
       T lhs, T rhs
-    ) noexcept attr_const {
+    ) noexcept {
       return
         (lhs < 0) ||
         (rhs < 0) ||
@@ -311,9 +309,9 @@ namespace iron {
 
     // Unary negation
     template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, bool> is_unary_negation_safe(
+    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, bool> is_unary_negation_safe(
       T value
-    ) noexcept attr_const {
+    ) noexcept {
       return std::numeric_limits<T>::min() == value ? false : true;
     }
 
@@ -324,7 +322,7 @@ namespace iron {
 
     namespace internals {
       template <typename T>
-      constexpr uint32_t power_helper(T base, T exponent, T sqrt) noexcept attr_const {
+      constexpr attr_const uint32_t power_helper(T base, T exponent, T sqrt) noexcept {
         return sqrt * sqrt * ((exponent % 2U) ? base : 1U);
       }
     }
@@ -357,16 +355,16 @@ namespace iron {
 
     namespace internals {
       template <typename T>
-      constexpr uint32_t num_digits_recursive(T n, uint32_t digits = 1U) noexcept attr_const;
+      constexpr attr_const uint32_t num_digits_recursive(T n, uint32_t digits = 1U) noexcept;
     }
 
 
     // Computes the number of digits in an integer
     // Does less-than comparisons to 7 digits, then gives up and recurses
     template <typename T>
-    constexpr std::enable_if_t<std::is_unsigned<T>::value, uint32_t> num_digits(
+    constexpr attr_const std::enable_if_t<std::is_unsigned<T>::value, uint32_t> num_digits(
       T n
-    ) noexcept attr_const {
+    ) noexcept {
       return  n < 10U ? 1U :
         n < 100U ? 2U :
         n < 1000U ? 3U :
@@ -378,16 +376,16 @@ namespace iron {
     }
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, uint32_t> num_digits(
+    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, uint32_t> num_digits(
       T n
-    ) noexcept attr_const {
+    ) noexcept {
       return num_digits(to_unsigned(to_positive(n)));
     }
 
 
     namespace internals {
       template <typename T>
-      constexpr uint32_t num_digits_recursive(T n, uint32_t digits) noexcept attr_const {
+      constexpr attr_const uint32_t num_digits_recursive(T n, uint32_t digits) noexcept {
         return n < power(10U, digits) ? digits : num_digits_recursive(n, digits + 1U);
       }
     }
@@ -398,9 +396,9 @@ namespace iron {
     ///////////////////////
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_integral<T>::value, T> round_up(
+    constexpr attr_const std::enable_if_t<std::is_integral<T>::value, T> round_up(
       T n, T multiple
-    ) noexcept attr_const {
+    ) noexcept {
       return multiple != 0 ? ((n + multiple - 1) / multiple) * multiple : 0;
     }
 
@@ -412,10 +410,10 @@ namespace iron {
     ///////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    constexpr __attribute__((const)) T min(T a, T b) noexcept { return a < b ? a : b; }
+    constexpr attr_const T min(T a, T b) noexcept { return a < b ? a : b; }
 
     template <typename T, typename U>
-    constexpr __attribute__((const)) std::enable_if_t<
+    constexpr attr_const std::enable_if_t<
       (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
       T
     > min(T a, U b) noexcept {
@@ -423,7 +421,7 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr __attribute__((const)) std::enable_if_t<
+    constexpr attr_const std::enable_if_t<
       (std::numeric_limits<U>::max() > std::numeric_limits<T>::max()),
       U
     > min(T a, U b) noexcept {
@@ -438,10 +436,10 @@ namespace iron {
     ///////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    constexpr __attribute__((const)) T max(T a, T b) noexcept { return a < b ? b : a; }
+    constexpr attr_const T max(T a, T b) noexcept { return a < b ? b : a; }
 
     template <typename T, typename U>
-    constexpr __attribute__((const)) std::enable_if_t<
+    constexpr attr_const std::enable_if_t<
       (std::numeric_limits<T>::max() > std::numeric_limits<U>::max()),
       T
     > max(T a, U b) noexcept {
@@ -449,7 +447,7 @@ namespace iron {
     }
 
     template <typename T, typename U>
-    constexpr __attribute__((const)) std::enable_if_t<
+    constexpr attr_const std::enable_if_t<
       (std::numeric_limits<U>::max() > std::numeric_limits<T>::max()),
       U
     > max(T a, U b) noexcept {
@@ -461,8 +459,4 @@ namespace iron {
 
 #ifdef attr_const
 #undef attr_const
-#endif
-
-#if __clang__
-#pragma clang diagnostic pop  // -Wgcc-compat
 #endif
