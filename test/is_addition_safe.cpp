@@ -15,7 +15,7 @@ TEST_CASE("is_addition_safe() for signed values returns true if addition op is s
   
   REQUIRE(true == is_addition_safe(0, 0));
   
-  for (size_t i = 0; i < std::numeric_limits<int8_t>::max(); ++i) {
+  for (size_t i = 0; i < static_cast<size_t>(std::numeric_limits<int8_t>::max()); ++i) {
     CHECK(true == is_addition_safe(0, i));
   }
   
@@ -31,7 +31,7 @@ TEST_CASE("is_addition_safe() for signed values returns false if addition op is 
   {
     using t = int8_t;
   
-    for (size_t i = 1; i < (std::numeric_limits<t>::max() * 2); ++i) {
+	for (size_t i = 1; i < (static_cast<size_t>(std::numeric_limits<t>::max()) * 2ull); ++i) {
       CHECK(false == is_addition_safe(std::numeric_limits<t>::max(), i));
     }
   };
@@ -39,7 +39,7 @@ TEST_CASE("is_addition_safe() for signed values returns false if addition op is 
   {
     using t = int16_t;
     
-    for (size_t i = 1; i < std::numeric_limits<t>::max(); ++i) {
+    for (size_t i = 1; i < static_cast<size_t>(std::numeric_limits<t>::max()); ++i) {
       CHECK(false == is_addition_safe(std::numeric_limits<t>::max(), i));
     }
   }
