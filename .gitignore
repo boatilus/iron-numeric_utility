@@ -470,7 +470,10 @@ paket-files/
 *.sln.iml
 
 # Visual Studio build ouputs
-/Debug (Clang)
-/Release (Clang)
+/vs2015/Debug (Clang)
+/vs2015/Release (Clang)
+
+# Visual Studio Code
+.vscode/
 
 test/main
