@@ -64,8 +64,8 @@ namespace iron {
       return std::numeric_limits<T>::min() == n
         ? throw std::range_error("insufficient range to cast to a positive value")
         : n > 0
-        ? n
-        : (-n);
+          ? n
+          : (-n);
     }
 
     // TODO
@@ -156,14 +156,13 @@ namespace iron {
     template <typename T, typename LT, typename UT>
     constexpr std::enable_if_t<all_integral<T, LT, UT>::value, T> clamp(T n, LT lower, UT upper) {
       internal::check_clamp_range(lower, upper);
-    
-      if (n < lower) {
-        return static_cast<T>(lower);
-      } else if (n > upper) {
-        return static_cast<T>(upper);
-      } else {
-        return n;
-      }
+
+      return
+        n < lower
+          ? static_cast<T>(lower)
+          : n > upper
+            ? static_cast<T>(upper)
+            : n;
     }
     
     
@@ -204,24 +203,31 @@ namespace iron {
     constexpr attr_const std::enable_if_t<
       std::is_signed<T>::value && std::is_integral<U>::value, bool
     > is_addition_safe(T lhs, U rhs) noexcept {
-      if (std::numeric_limits<T>::max() < static_cast<intmax_t>(rhs)) return false;
-      
-      const auto _rhs { static_cast<T>(rhs) };
-    
       return
-        ((_rhs > 0) && (lhs > (std::numeric_limits<T>::max() - _rhs))) ||
-        ((_rhs < 0) && (lhs < (std::numeric_limits<T>::min() - _rhs)))
-        ? false
-        : true;
+            (std::numeric_limits<T>::max() < static_cast<intmax_t>(rhs))
+        ||
+            (
+                  (static_cast<T>(rhs) > 0)
+              &&  (lhs > (std::numeric_limits<T>::max() - static_cast<T>(rhs)))
+            )
+        ||  (
+                  (static_cast<T>(rhs) < 0)
+              &&  (lhs < (std::numeric_limits<T>::min() - static_cast<T>(rhs)))
+            )
+          ? false
+          : true;
     }
 
     template <typename T, typename U>
     constexpr attr_const std::enable_if_t<
       std::is_unsigned<T>::value && std::is_integral<U>::value, bool
     > is_addition_safe(T lhs, U rhs) noexcept {
-      if (std::numeric_limits<T>::max() < static_cast<uintmax_t>(rhs)) return false;
-    
-      return lhs > (std::numeric_limits<T>::max() - static_cast<T>(rhs)) ? false : true;
+      return
+          (std::numeric_limits<T>::max() < static_cast<uintmax_t>(rhs))
+        ||
+          (lhs > (std::numeric_limits<T>::max() - static_cast<T>(rhs)))
+          ? false
+          : true;
     }
 
 
@@ -233,8 +239,8 @@ namespace iron {
       return
         ((rhs > 0) && (lhs < (std::numeric_limits<T>::min() + rhs))) ||
         ((rhs < 0) && (lhs > (std::numeric_limits<T>::max() + rhs)))
-        ? false
-        : true;
+          ? false
+          : true;
     }
 
     template <typename T>
@@ -252,8 +258,8 @@ namespace iron {
     ) noexcept {
       return
         to_positive(lhs) >(std::numeric_limits<T>::max() / to_positive(rhs))
-        ? false
-        : true;
+          ? false
+          : true;
     }
 
     template <typename T>
@@ -271,8 +277,8 @@ namespace iron {
     ) noexcept {
       return
         (0 == rhs) || ((std::numeric_limits<T>::min() == lhs) && (-1 == rhs))
-        ? false
-        : true;
+          ? false
+          : true;
     }
 
     template <typename T>
@@ -298,12 +304,12 @@ namespace iron {
       T lhs, T rhs
     ) noexcept {
       return
-        (lhs < 0) ||
-        (rhs < 0) ||
-        (rhs >= std::numeric_limits<unsigned long long>::digits) ||
-        (lhs >(std::numeric_limits<T>::max() >> rhs))
-        ? false
-        : true;
+           (lhs < 0)
+        || (rhs < 0)
+        || (rhs >= std::numeric_limits<unsigned long long>::digits)
+        || (lhs > (std::numeric_limits<T>::max() >> rhs))
+          ? false
+          : true;
     }
 
 
@@ -334,8 +340,10 @@ namespace iron {
     ) {
       return
         exponent > 0
-        ? exponent == 0 ? 1 : internals::power_helper(base, exponent, power(base, exponent / 2))
-        : throw std::range_error("negative exponent passed to power()");
+          ? exponent == 0
+            ? 1
+            : internals::power_helper(base, exponent, power(base, exponent / 2))
+              : throw std::range_error("negative exponent passed to power()");
     }
 
     template <typename T>
@@ -344,8 +352,8 @@ namespace iron {
     ) {
       return
         exponent == 0U
-        ? 1U
-        : internals::power_helper(base, exponent, power(base, exponent / 2U));
+          ? 1U
+          : internals::power_helper(base, exponent, power(base, exponent / 2U));
     }
 
 
