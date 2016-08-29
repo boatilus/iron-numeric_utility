@@ -232,15 +232,37 @@ namespace iron {
 
 
     // Subtraction
-    template <typename T>
-    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, bool> is_subtraction_safe(
-      T lhs, T rhs
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+      all_signed<T, U>::value && std::is_same<T, U>::value, bool
+    > is_subtraction_safe(
+      T lhs, U rhs
     ) noexcept {
       return
-        ((rhs > 0) && (lhs < (std::numeric_limits<T>::min() + rhs))) ||
-        ((rhs < 0) && (lhs > (std::numeric_limits<T>::max() + rhs)))
-          ? false
-          : true;
+        ((rhs >= 0) && (lhs > (std::numeric_limits<T>::min() + rhs))) ||
+        ((rhs <= 0) && (lhs < (std::numeric_limits<T>::max() + rhs)))
+          ? true
+          : false;
+    }
+
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+         std::is_signed<T>::value
+      && std::is_unsigned<U>::value
+      && has_eq_or_greater_range<T, U>::value,
+      bool
+    > is_subtraction_safe(T lhs, U rhs) noexcept {
+      return lhs > (std::numeric_limits<T>::min() + static_cast<T>(rhs)) ? true : false;
+    }
+
+    template <typename T, typename U>
+    constexpr std::enable_if_t<
+         std::is_unsigned<T>::value
+      && std::is_signed<U>::value
+      && has_eq_or_greater_range<U, T>::value,
+      bool
+    > is_subtraction_safe(T lhs, U rhs) noexcept {
+      return (rhs >= 0) && (static_cast<U>(lhs) > (0 + rhs)) ? true : false;
     }
 
     template <typename T>
