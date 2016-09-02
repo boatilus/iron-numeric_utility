@@ -16,6 +16,8 @@
 		E4812C871D4ED163002AC315 /* to_unsigned.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4812C801D4ED163002AC315 /* to_unsigned.cpp */; };
 		E4812C891D4ED27C002AC315 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = E4812C881D4ED27C002AC315 /* Makefile */; };
 		E4AAE8E01D4F063A00374248 /* is_subtraction_safe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4AAE8DF1D4F063A00374248 /* is_subtraction_safe.cpp */; };
+		E4EB720E1D76731C00451132 /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EB720D1D76731C00451132 /* power.cpp */; };
+		E4EB72101D79279200451132 /* is_multiplication_safe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4EB720F1D79279200451132 /* is_multiplication_safe.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +42,8 @@
 		E4812C801D4ED163002AC315 /* to_unsigned.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = to_unsigned.cpp; path = ../test/to_unsigned.cpp; sourceTree = "<group>"; };
 		E4812C881D4ED27C002AC315 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../test/Makefile; sourceTree = "<group>"; };
 		E4AAE8DF1D4F063A00374248 /* is_subtraction_safe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_subtraction_safe.cpp; path = ../test/is_subtraction_safe.cpp; sourceTree = "<group>"; };
+		E4EB720D1D76731C00451132 /* power.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = power.cpp; path = ../test/power.cpp; sourceTree = "<group>"; };
+		E4EB720F1D79279200451132 /* is_multiplication_safe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = is_multiplication_safe.cpp; path = ../test/is_multiplication_safe.cpp; sourceTree = "<group>"; };
 		E4EC899E1D484CF900CFD7B5 /* iron-numeric_utility */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "iron-numeric_utility"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4EC89A81D48543200CFD7B5 /* numeric_utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = numeric_utility.h; path = ../numeric_utility.h; sourceTree = "<group>"; };
 		E4EC89A91D48543A00CFD7B5 /* catch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = catch.h; path = ../deps/catch.h; sourceTree = "<group>"; };
@@ -60,10 +64,12 @@
 		E4EC89951D484CF800CFD7B5 = {
 			isa = PBXGroup;
 			children = (
+				E4EB720F1D79279200451132 /* is_multiplication_safe.cpp */,
 				E4AAE8DF1D4F063A00374248 /* is_subtraction_safe.cpp */,
 				E4812C881D4ED27C002AC315 /* Makefile */,
 				E4812C7A1D4ED163002AC315 /* clamp.cpp */,
 				E4812C7B1D4ED163002AC315 /* is_addition_safe.cpp */,
+				E4EB720D1D76731C00451132 /* power.cpp */,
 				E4812C7C1D4ED163002AC315 /* is_negative.cpp */,
 				E4812C7D1D4ED163002AC315 /* is_positive.cpp */,
 				E4812C7E1D4ED163002AC315 /* to_positive.cpp */,
@@ -149,6 +155,8 @@
 				E4812C861D4ED163002AC315 /* to_signed.cpp in Sources */,
 				E4812C891D4ED27C002AC315 /* Makefile in Sources */,
 				E4812C811D4ED163002AC315 /* clamp.cpp in Sources */,
+				E4EB720E1D76731C00451132 /* power.cpp in Sources */,
+				E4EB72101D79279200451132 /* is_multiplication_safe.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
