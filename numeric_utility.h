@@ -94,18 +94,18 @@ namespace iron {
         : throw std::range_error("conversion of negative value to unsigned is unsafe");
     }
 
-    
+
     // Safely converts from unsigned to signed for all cases except `uint64_t`
     constexpr attr_const auto to_signed(uint8_t n) noexcept { return static_cast<int16_t>(n); }
     constexpr attr_const auto to_signed(uint16_t n) noexcept { return static_cast<int32_t>(n); }
     constexpr attr_const auto to_signed(uint32_t n) noexcept { return static_cast<int64_t>(n); }
-    
+
     constexpr auto to_signed(uint64_t n) {
       return static_cast<uint64_t>(std::numeric_limits<int64_t>::max()) >= n
         ? static_cast<int64_t>(n)
         : throw std::range_error("conversion of signed value to unsigned is unsafe");
     }
-    
+
     /*
     // Safely converts from unsigned to signed for all cases except `uint64_t`
     template <typename T>
@@ -115,7 +115,7 @@ namespace iron {
       return static_cast<typename safe_to_int<T>::type>(n);
     }
     */
-    
+
 
     /////////////////////
     // Integral bounds //
@@ -130,7 +130,7 @@ namespace iron {
       if (lower > upper) {
         throw std::invalid_argument("lower bound mustn't be greater than upper bound");
       }
-    
+
       if (n < lower) {
         return lower;
       } else if (n > upper) {
@@ -140,7 +140,7 @@ namespace iron {
       }
     }
     */
-    
+
     // Clamps an integer within [`lower`, `upper`], throwing exception if `lower`'s not less than or
     // equal to `upper`
     namespace internal {
@@ -151,8 +151,8 @@ namespace iron {
           : 0;
       }
     }
-    
-    
+
+
     template <typename T, typename LT, typename UT>
     constexpr std::enable_if_t<all_integral<T, LT, UT>::value, T> clamp(T n, LT lower, UT upper) {
       internal::check_clamp_range(lower, upper);
@@ -164,8 +164,8 @@ namespace iron {
             ? static_cast<T>(upper)
             : n;
     }
-    
-    
+
+
     // Clamps an integer within [`lower`, `upper]
     template <typename T, T lower, T upper>
     constexpr attr_const std::enable_if_t<
@@ -197,7 +197,7 @@ namespace iron {
     /////////////////////////////
     // Integral safe operation //
     /////////////////////////////
-  
+
     // Addition
     template <typename T, typename U>
     constexpr attr_const std::enable_if_t<
@@ -232,37 +232,15 @@ namespace iron {
 
 
     // Subtraction
-    template <typename T, typename U>
-    constexpr std::enable_if_t<
-      all_signed<T, U>::value && std::is_same<T, U>::value, bool
-    > is_subtraction_safe(
-      T lhs, U rhs
+    template <typename T>
+    constexpr attr_const std::enable_if_t<std::is_signed<T>::value, bool> is_subtraction_safe(
+      T lhs, T rhs
     ) noexcept {
       return
         ((rhs >= 0) && (lhs > (std::numeric_limits<T>::min() + rhs))) ||
         ((rhs <= 0) && (lhs < (std::numeric_limits<T>::max() + rhs)))
           ? true
           : false;
-    }
-
-    template <typename T, typename U>
-    constexpr std::enable_if_t<
-         std::is_signed<T>::value
-      && std::is_unsigned<U>::value
-      && has_eq_or_greater_range<T, U>::value,
-      bool
-    > is_subtraction_safe(T lhs, U rhs) noexcept {
-      return lhs > (std::numeric_limits<T>::min() + static_cast<T>(rhs)) ? true : false;
-    }
-
-    template <typename T, typename U>
-    constexpr std::enable_if_t<
-         std::is_unsigned<T>::value
-      && std::is_signed<U>::value
-      && has_eq_or_greater_range<U, T>::value,
-      bool
-    > is_subtraction_safe(T lhs, U rhs) noexcept {
-      return (rhs >= 0) && (static_cast<U>(lhs) > (0 + rhs)) ? true : false;
     }
 
     template <typename T>
@@ -279,7 +257,7 @@ namespace iron {
       T lhs, T rhs
     ) noexcept {
       return
-        to_positive(lhs) >(std::numeric_limits<T>::max() / to_positive(rhs))
+        to_positive(lhs) > (std::numeric_limits<T>::max() / to_positive(rhs))
           ? false
           : true;
     }
@@ -350,22 +328,22 @@ namespace iron {
 
     namespace internals {
       template <typename T>
-      constexpr attr_const uint32_t power_helper(T base, T exponent, T sqrt) noexcept {
-        return sqrt * sqrt * ((exponent % 2U) ? base : 1U);
+      constexpr attr_const uint32_t power_helper(T base, uint32_t exponent, T sqrt) noexcept {
+        return sqrt * sqrt * ((exponent % 2u) ? base : 1u);
       }
     }
 
 
     template <typename T>
-    constexpr std::enable_if_t<std::is_signed<T>::value, uint32_t> power(
+    constexpr std::enable_if_t<std::is_signed<T>::value, T> power(
       T base, T exponent
     ) {
       return
-        exponent > 0
-          ? exponent == 0
+        0 < exponent
+          ? internals::power_helper(base, static_cast<uint32_t>(exponent), power(base, exponent / 2))
+          : 0 == exponent
             ? 1
-            : internals::power_helper(base, exponent, power(base, exponent / 2))
-              : throw std::range_error("negative exponent passed to power()");
+            : throw std::range_error("exponent passed to power() must be positive");
     }
 
     template <typename T>
@@ -373,9 +351,9 @@ namespace iron {
       T base, T exponent
     ) {
       return
-        exponent == 0U
-          ? 1U
-          : internals::power_helper(base, exponent, power(base, exponent / 2U));
+        exponent == 0u
+          ? 1u
+          : internals::power_helper(base, exponent, power(base, exponent / 2u));
     }
 
 
